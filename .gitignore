@@ -1,0 +1,19 @@
+# Node (chỉ là test/dev deps, không thuộc dự án)
+node_modules/
+package-lock.json
+
+# Python
+__pycache__/
+*.pyc
+
+# Local agent skills
+.agents/
+skills-lock.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+*.log
+
+# Local env
+.env

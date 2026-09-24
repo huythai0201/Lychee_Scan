@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#e63956" />
+  <title>LycheeScan - Kiểm tra độ chín quả vải</title>
+  <meta name="description" content="LycheeScan: đề tài NCKH dùng AI phân loại độ chín quả vải thành ba mức lớn chỉ trong vài giây." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><circle cx="32" cy="38" r="22" fill="%23e63956"/><ellipse cx="40" cy="16" rx="10" ry="5" fill="%234e9b47" transform="rotate(-24 40 16)"/></svg>' />
+  <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";</script>
+</head>
+<body>
+  <!-- Nền: mesh blob lệch góc + grain -->
+  <div class="bg-decor" aria-hidden="true">
+    <span class="blob blob-red"></span>
+    <span class="blob blob-green"></span>
+    <span class="blob blob-pink"></span>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#home" data-go="home" aria-label="LycheeScan">
+        <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true">
+          <ellipse cx="42" cy="15" rx="11" ry="5.5" fill="#4e9b47" transform="rotate(-24 42 15)"/>
+          <rect x="35" y="15" width="3" height="8" rx="1.5" fill="#7a4a2b" transform="rotate(-14 36 19)"/>
+          <circle cx="32" cy="39" r="21" fill="#e63956"/>
+          <circle cx="25" cy="33" r="2.2" fill="#f2607c"/><circle cx="33" cy="30" r="2" fill="#f2607c"/>
+          <circle cx="40" cy="35" r="2.2" fill="#f2607c"/><circle cx="27" cy="42" r="2" fill="#f2607c"/>
+          <circle cx="36" cy="44" r="2.2" fill="#f2607c"/><circle cx="30" cy="50" r="2" fill="#f2607c"/>
+          <ellipse cx="24" cy="30" rx="5" ry="3.4" fill="#fff" opacity="0.35" transform="rotate(-28 24 30)"/>
+        </svg>
+        <span class="brand-text">Lychee<span>Scan</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Mở menu" aria-expanded="false" aria-controls="nav-menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" id="nav-menu" aria-label="Điều hướng trang">
+        <a class="nav-link" href="#home"          data-go="home"          data-i18n="nav.home">Trang chủ</a>
+        <a class="nav-link" href="#product"       data-go="product"        data-i18n="nav.product">Sản phẩm</a>
+        <a class="nav-link" href="#significance" data-go="significance"   data-i18n="nav.significance">Ý nghĩa</a>
+        <a class="nav-link" href="#timeline"     data-go="timeline"      data-i18n="nav.timeline">Timeline</a>
+        <a class="nav-link" href="#future"        data-go="future"        data-i18n="nav.future">Ý tưởng</a>
+        <a class="nav-link" href="#team"          data-go="team"          data-i18n="nav.team">Đội nhóm</a>
+        <a class="nav-link" href="#gallery"      data-go="gallery"       data-i18n="nav.gallery">Thư viện</a>
+      </nav>
+
+      <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Ngôn ngữ / Language">
+        <button type="button" data-lang="vi" aria-pressed="true">VI</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" aria-label="Chuyển sang giao diện tối">
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3L6.9 6.9M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="main container">
+
+    <!-- ============ HOME ============ -->
+    <section class="view is-active" data-view="home">
+      <!-- Hero bất đối xứng (split), copy trái + preview phải -->
+      <div class="hero">
+        <div class="hero-text">
+          <p class="eyebrow" data-i18n="hero.eyebrow">Đề tài nghiên cứu khoa học</p>
+          <h1 class="hero-h1">
+            <span data-i18n="hero.titleA">Soi độ chín quả vải</span>
+            <strong data-i18n="hero.titleB">bằng trí tuệ nhân tạo</strong>
+          </h1>
+          <p class="hero-sub" data-i18n="hero.sub">Chụp một quả vải, mô hình AI chấm độ chín thuộc một trong ba mức lớn chỉ trong vài giây.</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary" data-go="product">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 4l1.7 4.3L18 10l-4.3 1.7L12 16l-1.7-4.3L6 10l4.3-1.7L12 4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="hero.cta.try">Thử ngay</span>
+            </button>
+            <button class="btn btn-ghost" data-go="significance">
+              <span data-i18n="hero.cta.more">Ý nghĩa đề tài</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview output: component thật (mini version) của sản phẩm. Giá trị tĩnh minh họa, không phải dự đoán thật. -->
+        <div class="hero-art">
+          <p class="art-caption" data-i18n="hero.previewCaption">Xem trước kết quả</p>
+          <div class="preview-demo" data-level="chin_toi">
+            <div class="pd-thumb" aria-hidden="true">
+              <svg viewBox="0 0 64 64"><circle cx="32" cy="39" r="20" fill="#e63956"/><circle cx="26" cy="34" r="2" fill="#f2607c"/><circle cx="36" cy="36" r="2" fill="#f2607c"/><circle cx="31" cy="44" r="2" fill="#f2607c"/><ellipse cx="40" cy="16" rx="9" ry="4.5" fill="#4e9b47" transform="rotate(-24 40 16)"/></svg>
+            </div>
+            <div class="pd-badge" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="28" r="14" stroke="#fff" stroke-width="3"/><path d="M30 14c1-4 5-5 7-5-1 3-3 6-6 6.5" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="19" cy="25" r="1.8" fill="#fff"/><circle cx="28" cy="24" r="1.8" fill="#fff"/><circle cx="24" cy="33" r="1.8" fill="#fff"/></svg>
+            </div>
+            <p class="pd-kicker" data-i18n="pd.kicker">Kết quả phân tích</p>
+            <h3 class="pd-label" data-i18n="pd.label">Chín tới</h3>
+            <div class="pd-ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="#fff" stroke-opacity="0.3" stroke-width="11"/><circle cx="60" cy="60" r="52" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="45.7" transform="rotate(-90 60 60)"/></svg>
+              <span class="pd-pct">86%</span>
+            </div>
+            <div class="pd-bars" aria-hidden="true">
+              <span class="pd-bar"><i style="--v:.12"></i><b></b></span>
+              <span class="pd-bar"><i style="--v:.86"></i><b></b></span>
+              <span class="pd-bar"><i style="--v:.18"></i><b></b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-glow" aria-hidden="true"></div>
+
+      <!-- Mô tả đề tài (nằm trong trang chủ) -->
+      <section class="page-section proj-desc">
+        <h2 class="section-h" data-i18n="desc.heading">Mô tả đề tài</h2>
+        <div class="desc-grid">
+          <p data-i18n="desc.body1">Đề tài nghiên cứu ứng dụng Mạng Nơ-ron Tích chập (CNNs) để tự động phân loại độ chín của quả vải, sử dụng trí tuệ nhân tạo và xử lý hình ảnh nhằm xác định độ chín dựa trên màu sắc và đặc điểm của vỏ quả.</p>
+          <p data-i18n="desc.body2">Quá trình thực hiện bao gồm thu thập hình ảnh quả vải ở các giai đoạn chín khác nhau, gán nhãn và chuẩn hóa dữ liệu, huấn luyện mô hình CNN, sau đó kiểm tra và đánh giá kết quả bằng các chỉ số Accuracy, Precision, Recall và F1-Score.</p>
+        </div>
+        <ul class="chips">
+          <li data-i18n="desc.chip1">Lĩnh vực: Computer Vision &amp; AI</li>
+          <li data-i18n="desc.chip2">Đối tượng: Quả vải tươi</li>
+          <li data-i18n="desc.chip3">Phương pháp: Phân loại ảnh</li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- ============ PRODUCT ============ -->
+    <section class="view" data-view="product">
+      <div class="page-head">
+        <p class="section-kicker" data-i18n="product.kicker">Sản phẩm</p>
+        <h1 class="section-h" data-i18n="product.heading">LycheeScan, công cụ chấm độ chín</h1>
+        <p class="section-lede" data-i18n="product.sub">Tải ảnh một quả vải lên, để mô hình đo độ chín thuộc một trong ba mức lớn.</p>
+      </div>
+
+      <div class="product-shell">
+        <!-- ============ STATE: UPLOAD ============ -->
+        <section class="state is-active" id="state-upload" aria-label="Tải ảnh lên">
+          <div class="up-copy">
+            <h2 class="up-title">
+              <span data-i18n="up.titleA">Quả vải của bạn</span>
+              <strong data-i18n="up.titleB">đã chín chưa?</strong>
+            </h2>
+            <p class="up-sub" data-i18n="up.sub">Chụp hoặc tải ảnh một quả, AI chấm độ chín trong vài giây.</p>
+          </div>
+
+          <div class="model-select" id="model-select" role="group" aria-label="Chọn mô hình AI">
+            <button type="button" class="model-opt is-active" data-model="mobilenet_v3_small" aria-pressed="true">
+              <span class="model-opt-name">MobileNetV3</span>
+              <span class="model-opt-tag" data-i18n="model.mobilenet.tag">Nhanh · nhẹ</span>
+            </button>
+            <button type="button" class="model-opt" data-model="resnet50" aria-pressed="false">
+              <span class="model-opt-name">ResNet50</span>
+              <span class="model-opt-tag" data-i18n="model.resnet50.tag">Chính xác hơn</span>
+            </button>
+          </div>
+
+          <div class="dz-stack">
+            <span class="dz-sheet" aria-hidden="true"></span>
+            <button type="button" class="dropzone" id="dropzone">
+              <span class="dz-icon" aria-hidden="true">
+                <svg viewBox="0 0 64 64" fill="none">
+                  <rect x="8" y="14" width="48" height="38" rx="8" stroke="currentColor" stroke-width="3.5"/>
+                  <circle cx="23" cy="27" r="4.5" fill="currentColor"/>
+                  <path d="M8 44l13-11 9 8 11-9 15 12" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <span class="dz-text">
+                <span class="dz-title" data-i18n="dz.title">Chọn ảnh quả vải</span>
+                <span class="dz-sub" data-i18n="dz.sub">Chạm để chọn, hoặc kéo thả vào đây</span>
+                <span class="dz-hint">JPG, PNG, WEBP · tối đa 10&nbsp;MB</span>
+              </span>
+            </button>
+          </div>
+          <input type="file" id="file-input" accept="image/*" hidden />
+
+          <ul class="tips">
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span data-i18n="tip1">Ảnh rõ nét, đủ sáng</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="13" r="7" stroke="currentColor" stroke-width="2"/><path d="M15 6c1-2 3-2.5 4-2.5C19 5 18 7 16 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span data-i18n="tip2">Một quả vải trong khung</span></li>
+            <li><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 8.7l5.4-.8L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><span data-i18n="tip3">Không cần thẻ màu chuẩn</span></li>
+          </ul>
+        </section>
+
+        <!-- ============ STATE: PREVIEW ============ -->
+        <section class="state" id="state-preview" aria-label="Xem trước ảnh">
+          <div class="preview-card">
+            <img id="preview-img" alt="" />
+            <div class="preview-meta">
+              <span class="file-name" id="file-name">anh.jpg</span>
+              <span class="file-size" id="file-size">0 KB</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-analyze">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 3v4M3 5h4M19 17v4M17 19h4M12 4l1.7 4.3L18 10l-4.3 1.7L12 16l-1.7-4.3L6 10l4.3-1.7L12 4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="btn.analyze">Phân tích ngay</span>
+            </button>
+            <button type="button" class="btn btn-ghost" id="btn-repick"><span data-i18n="btn.repick">Thử ảnh khác</span></button>
+          </div>
+        </section>
+
+        <!-- ============ STATE: LOADING ============ -->
+        <section class="state" id="state-loading" aria-label="Đang phân tích" aria-live="polite">
+          <div class="scan-card">
+            <img id="scan-img" alt="" />
+            <span class="scan-line" aria-hidden="true"></span>
+            <span class="scan-grid" aria-hidden="true"></span>
+          </div>
+          <ul class="steps" id="steps">
+            <li data-step="0"><span class="dot"></span><span data-i18n="step0">Đang nạp mô hình AI…</span></li>
+            <li data-step="1"><span class="dot"></span><span data-i18n="step1">Đang phân tích màu sắc vỏ quả…</span></li>
+            <li data-step="2"><span class="dot"></span><span data-i18n="step2">Đang đối chiếu mô hình độ chín…</span></li>
+            <li data-step="3"><span class="dot"></span><span data-i18n="step3">Đang tổng hợp kết quả…</span></li>
+          </ul>
+        </section>
+
+        <!-- ============ STATE: RESULT ============ -->
+        <section class="state" id="state-result" aria-label="Kết quả phân tích" aria-live="polite">
+          <div class="result-panel">
+            <div class="result-thumb"><img id="result-img" alt="" /></div>
+            <div class="result-badge" id="result-badge" aria-hidden="true"></div>
+            <p class="result-kicker" data-i18n="res.kicker">Kết quả phân tích</p>
+            <h2 class="result-label" id="result-label">Chín tới</h2>
+          </div>
+
+          <div class="result-sheet">
+            <div class="sheet-top">
+              <div class="confidence">
+                <svg class="ring" viewBox="0 0 120 120">
+                  <circle class="ring-bg" cx="60" cy="60" r="52" />
+                  <circle class="ring-fg" id="ring-fg" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="confidence-text">
+                  <span class="confidence-value" id="confidence-value">0</span><span class="confidence-unit">%</span>
+                  <span class="confidence-caption" data-i18n="res.cap">độ tin cậy</span>
+                </div>
+              </div>
+              <p class="result-hint" id="result-hint"></p>
+            </div>
+
+            <div class="probs">
+              <h3 data-i18n="res.probsH">Độ tin cậy từng mức</h3>
+              <div class="prob-row" data-key="chua_chin">
+                <span class="prob-name"><svg class="prob-check" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="lvl.chua_chin">Chưa chín</span></span>
+                <span class="prob-bar"><span class="prob-fill"></span></span>
+                <span class="prob-value">0%</span>
+              </div>
+              <div class="prob-row" data-key="chin_toi">
+                <span class="prob-name"><svg class="prob-check" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="lvl.chin_toi">Chín tới</span></span>
+                <span class="prob-bar"><span class="prob-fill"></span></span>
+                <span class="prob-value">0%</span>
+              </div>
+              <div class="prob-row" data-key="chin_ky">
+                <span class="prob-name"><svg class="prob-check" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="lvl.chin_ky">Chín kỹ</span></span>
+                <span class="prob-bar"><span class="prob-fill"></span></span>
+                <span class="prob-value">0%</span>
+              </div>
+            </div>
+
+            <div class="gradcam">
+              <div class="gradcam-head">
+                <h3 data-i18n="cam.heading">Vì sao AI chọn nhãn này?</h3>
+                <label class="gradcam-switch">
+                  <input type="checkbox" id="cam-switch" checked />
+                  <span data-i18n="cam.switch">Vùng AI chú ý</span>
+                </label>
+              </div>
+              <div class="gradcam-frame">
+                <canvas id="cam-canvas" aria-hidden="true"></canvas>
+              </div>
+              <p class="gradcam-caption" data-i18n="cam.caption">Vùng càng đỏ đậm, AI càng dựa vào đó để chấm điểm. Chạm vào một mức độ chín ở trên để xem AI chú ý gì khi nghĩ tới mức đó.</p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-reset">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M4 10a8 8 0 1 1 2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 4v6h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span data-i18n="btn.reset">Thử ảnh khác</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ============ STATE: ERROR ============ -->
+        <section class="state" id="state-error" aria-label="Có lỗi xảy ra">
+          <div class="error-card">
+            <span class="error-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v6M12 16.5h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+            </span>
+            <h2 data-i18n="err.title">Chưa phân tích được</h2>
+            <p id="error-message"></p>
+            <p class="error-tip" data-i18n="err.tip">Mô hình AI cần tải về lần đầu qua Internet, sau đó chạy ngay trên máy bạn. Kiểm tra kết nối mạng rồi thử lại nhé.</p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn btn-primary" id="btn-retry"><span data-i18n="btn.retry">Thử lại</span></button>
+            <button type="button" class="btn btn-ghost" id="btn-back"><span data-i18n="btn.back">Thử ảnh khác</span></button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ============ SIGNIFICANCE (placeholder) ============ -->
+    <section class="view" data-view="significance">
+      <div class="page-head">
+        <h1 class="section-h" data-i18n="sig.heading">Ý nghĩa của đề tài</h1>
+        <p class="section-lede" data-i18n="sig.lede">Ý nghĩa khoa học và thực tiễn của việc dùng CNN để phân loại độ chín quả vải.</p>
+      </div>
+      <div class="placeholder-layout">
+        <div class="ph-block">
+          <span class="ph-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L4.2 8.7l5.4-.8L12 3z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span>
+          <h3 data-i18n="sig.p1h">Giá trị khoa học</h3>
+          <p data-i18n="sig.p1">Nghiên cứu tìm hiểu mối liên hệ giữa đặc điểm bề ngoài của quả vải và mức độ chín, đánh giá xem những thay đổi về hình ảnh có đủ để mô hình CNN phân biệt các giai đoạn chín hay không.</p>
+        </div>
+        <div class="ph-block">
+          <span class="ph-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12l4-4 5 5 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <h3 data-i18n="sig.p2h">Giá trị thực tiễn</h3>
+          <p data-i18n="sig.p2">Việc đánh giá độ chín hiện nay chủ yếu dựa vào mắt và kinh nghiệm, dễ gây sai lệch giữa người đánh giá. Nếu đạt độ chính xác phù hợp, mô hình có thể trở thành công cụ hỗ trợ phân loại và kiểm tra chất lượng quả vải nhanh chóng, nhất quán.</p>
+        </div>
+        <div class="ph-block">
+          <span class="ph-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5M12 16h.01" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+          <h3 data-i18n="sig.p3h">Tiềm năng và hạn chế</h3>
+          <p data-i18n="sig.p3">Phương pháp dựa trên hình ảnh chủ yếu cung cấp thông tin bề mặt, nên khó phát hiện hư hỏng bên trong quả. Đây là cơ sở để xem xét kết hợp thêm các cảm biến khác trong những nghiên cứu tiếp theo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ TIMELINE (placeholder) ============ -->
+    <section class="view" data-view="timeline">
+      <div class="page-head">
+        <h1 class="section-h" data-i18n="tl.heading">Timeline dự án</h1>
+        <p class="section-lede" data-i18n="tl.lede">Các mốc chính trong quá trình xây dựng và đánh giá mô hình LycheeScan.</p>
+      </div>
+      <ol class="timeline">
+        <li><span class="t-date" aria-hidden="true">-</span><div><h3 data-i18n="tl.m1">Khởi tạo ý tưởng</h3><p data-i18n="tl.m1d">Xác định đề tài và mục tiêu nghiên cứu, phạm vi ứng dụng CNN cho bài toán phân loại độ chín quả vải.</p></div></li>
+        <li><span class="t-date" aria-hidden="true">-</span><div><h3 data-i18n="tl.m2">Thu thập dữ liệu</h3><p data-i18n="tl.m2d">Thu thập hình ảnh quả vải ở các mức độ chín khác nhau, gán nhãn và chuẩn hóa dữ liệu để phục vụ huấn luyện.</p></div></li>
+        <li><span class="t-date" aria-hidden="true">-</span><div><h3 data-i18n="tl.m3">Huấn luyện mô hình</h3><p data-i18n="tl.m3d">Xây dựng và huấn luyện mô hình CNN trên bộ dữ liệu đã gán nhãn, kiểm tra trên hình ảnh mới và đánh giá bằng Accuracy, Precision, Recall, F1-Score.</p></div></li>
+        <li><span class="t-date" aria-hidden="true">-</span><div><h3 data-i18n="tl.m4">Xây dựng giao diện</h3><p data-i18n="tl.m4d">Phát triển giao diện LycheeScan để người dùng tải ảnh và xem kết quả phân tích độ chín.</p></div></li>
+        <li><span class="t-date" aria-hidden="true">-</span><div><h3 data-i18n="tl.m5">Triển lãm NCKH</h3><p data-i18n="tl.m5d">Trình bày kết quả thực nghiệm, đánh giá khả năng ứng dụng thực tế và đề xuất hướng phát triển tiếp.</p></div></li>
+      </ol>
+    </section>
+
+    <!-- ============ FUTURE (placeholder) ============ -->
+    <section class="view" data-view="future">
+      <div class="page-head">
+        <h1 class="section-h" data-i18n="future.heading">Ý tưởng phát triển</h1>
+        <p class="section-lede" data-i18n="future.lede">Hướng phát triển tiếp theo nhằm mở rộng khả năng ứng dụng của mô hình.</p>
+      </div>
+      <ul class="idea-list">
+        <li><span class="ph-icon sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 3v4M3 5h4M19 17v4M17 19h4M12 4l1.7 4.3L18 10l-4.3 1.7L12 16l-1.7-4.3L6 10l4.3-1.7L12 4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="future.i1h">Mở rộng loại trái cây</h3><p data-i18n="future.i1">Áp dụng phương pháp cho các loại trái cây khác có sự thay đổi màu sắc và đặc điểm vỏ theo độ chín.</p></div></li>
+        <li><span class="ph-icon sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="6" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M9 10h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><div><h3 data-i18n="future.i2h">Phiên bản di động</h3><p data-i18n="future.i2">Phiên bản di động giúp người nông dân kiểm tra độ chín tại vườn ngay trước khi thu hoạch.</p></div></li>
+        <li><span class="ph-icon sm" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 18l6-6 4 4 6-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div><h3 data-i18n="future.i3h">Tích hợp trực tiếp tại nhà máy</h3><p data-i18n="future.i3">Kết hợp vào dây chuyền phân loại ở nhà máy để tự động hoá kiểm tra chất lượng quả vải.</p></div></li>
+      </ul>
+    </section>
+
+    <!-- ============ TEAM ============ -->
+    <section class="view" data-view="team">
+      <div class="page-head">
+        <h1 class="section-h" data-i18n="team.heading">Đội ngũ thực hiện</h1>
+        <p class="section-lede" data-i18n="team.lede">Giáo viên hướng dẫn, trợ giảng và nhóm học sinh thực hiện dự án LycheeScan.</p>
+      </div>
+      <div class="team-group">
+        <h2 class="team-subhead" data-i18n="team.advisors">Giáo viên hướng dẫn &amp; Trợ giảng</h2>
+        <div class="team-grid team-grid--adv">
+          <article class="member-card"><img class="avatar" src="Potrait/LePhuc.jpg" alt="ThS. Lê Tuấn Phúc" width="72" height="72"><h3 data-i18n="team.n1">ThS. Lê Tuấn Phúc</h3><p class="member-role" data-i18n="team.r1">Giáo viên hướng dẫn</p><p class="member-aff" data-i18n="team.a1">Trường Hoá &amp; Khoa học sự sống · Đại học Bách khoa Hà Nội</p></article>
+          <article class="member-card"><img class="avatar" src="Potrait/HuyThai.png" alt="KS. Đàm Huy Thái" width="72" height="72"><h3 data-i18n="team.n2">KS. Đàm Huy Thái</h3><p class="member-role" data-i18n="team.r2">Trợ giảng</p><p class="member-aff" data-i18n="team.a2">Trường Hoá &amp; Khoa học sự sống · Đại học Bách khoa Hà Nội</p></article>
+        </div>
+      </div>
+      <div class="team-group">
+        <h2 class="team-subhead" data-i18n="team.students">Nhóm thực hiện</h2>
+        <div class="team-grid team-grid--stu">
+          <article class="member-card"><img class="avatar" src="Potrait/BaoKhang.jpg" alt="Lương Bảo Khang" width="72" height="72"><h3 data-i18n="team.n3">Lương Bảo Khang</h3><p class="member-role" data-i18n="team.r3">Dữ liệu &amp; Gán nhãn</p><p class="member-aff" data-i18n="team.a3">Lớp 10 Vinschool Times City</p></article>
+          <article class="member-card"><img class="avatar" src="Potrait/QuangHuy.jpg" alt="Đoàn Quang Huy" width="72" height="72"><h3 data-i18n="team.n5">Đoàn Quang Huy</h3><p class="member-role" data-i18n="team.r5">Đánh giá &amp; Kiểm thử</p><p class="member-aff" data-i18n="team.a5">Dunman Secondary School Singapore</p></article>
+          <article class="member-card"><img class="avatar" src="Potrait/HoaiAnh.jpg" alt="Phạm Hoài Anh" width="72" height="72"><h3 data-i18n="team.n4">Phạm Hoài Anh</h3><p class="member-role" data-i18n="team.r4">Báo cáo &amp; Trình bày</p><p class="member-aff" data-i18n="team.a4">Lớp 10 · Dwight School Hanoi</p></article>
+          <article class="member-card"><img class="avatar" src="Potrait/QuangVinh.png" alt="Đặng Quang Vinh" width="72" height="72"><h3 data-i18n="team.n6">Đặng Quang Vinh</h3><p class="member-role" data-i18n="team.r6">Giao diện &amp; Lập trình</p><p class="member-aff" data-i18n="team.a6">Lớp 10A5 THPT Cầu Giấy</p></article>
+          <article class="member-card"><img class="avatar" src="Potrait/QuangNghi.png" alt="Vương Quang Nghị" width="72" height="72"><h3 data-i18n="team.n7">Vương Quang Nghị</h3><p class="member-role" data-i18n="team.r7">Huấn luyện mô hình</p><p class="member-aff" data-i18n="team.a7">Lớp 9 · Dewey</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GALLERY (placeholder) ============ -->
+    <section class="view" data-view="gallery">
+      <div class="page-head">
+        <h1 class="section-h" data-i18n="gal.heading">Thư viện</h1>
+        <p class="section-lede" data-i18n="gal.lede">Ảnh chụp quá trình thực hiện và kết quả sẽ được bổ sung tại đây.</p>
+      </div>
+      <div class="gallery-grid">
+        <figure class="gal-tile"><img src="Gallery/lychee-01.jpg" alt="Ảnh dự án 01" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-02.jpg" alt="Ảnh dự án 02" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-03.jpg" alt="Ảnh dự án 03" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-04.jpg" alt="Ảnh dự án 04" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-05.jpg" alt="Ảnh dự án 05" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-06.jpg" alt="Ảnh dự án 06" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-07.jpg" alt="Ảnh dự án 07" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-08.jpg" alt="Ảnh dự án 08" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-09.jpg" alt="Ảnh dự án 09" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-10.jpg" alt="Ảnh dự án 10" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-11.jpg" alt="Ảnh dự án 11" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-12.jpg" alt="Ảnh dự án 12" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-13.jpg" alt="Ảnh dự án 13" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-14.jpg" alt="Ảnh dự án 14" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-15.jpg" alt="Ảnh dự án 15" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+        <figure class="gal-tile"><img src="Gallery/lychee-16.jpg" alt="Ảnh dự án 16" loading="lazy" width="640" height="480"><figcaption data-i18n="gal.cap">Ảnh dự án</figcaption></figure>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer container">
+    <span data-i18n="foot.note">Demo NCKH · Mô hình phân loại độ chín quả vải</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/ort.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
